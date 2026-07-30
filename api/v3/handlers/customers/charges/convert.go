@@ -65,7 +65,7 @@ func convertFlatFeeChargeToAPI(source flatfee.Charge) (api.BillingChargeFlatFee,
 		Description:          intent.Description,
 		Discounts:            convertFlatFeeDiscounts(intent.PercentageDiscounts),
 		Feature: &api.BillingChargeFeature{
-			Key: lo.FromPtr(intent.FeatureKey),
+			Key: intent.FeatureKey,
 		},
 		FullServicePeriod:      ConvertClosedPeriodToAPI(intent.FullServicePeriod),
 		Id:                     source.ChargeBase.ManagedResource.ID,
@@ -117,7 +117,7 @@ func convertUsageBasedChargeToAPI(source usagebased.Charge) (api.BillingChargeUs
 		Description:   intent.Description,
 		Discounts:     convertUsageBasedDiscounts(intent.Discounts),
 		Feature: api.BillingChargeFeature{
-			Key: intent.FeatureKey,
+			Key: &intent.FeatureKey,
 		},
 		FullServicePeriod:   ConvertClosedPeriodToAPI(intent.FullServicePeriod),
 		Id:                  source.ChargeBase.ManagedResource.ID,
@@ -555,7 +555,7 @@ func fromAPICreateChargeFlatFeeRequest(namespace, customerID string, flatFee api
 
 	var featureKey *string
 	if flatFee.Feature != nil {
-		featureKey = &flatFee.Feature.Key
+		featureKey = flatFee.Feature.Key
 	}
 
 	return billingcharges.CreateCustomerChargeInput{
@@ -646,7 +646,7 @@ func fromAPICreateChargeUsageBasedRequest(namespace, customerID string, usageBas
 				Price:     *price,
 				Discounts: discounts,
 			},
-			FeatureKey:     usageBasedFee.Feature.Key,
+			FeatureKey:     lo.FromPtr(usageBasedFee.Feature.Key),
 			SettlementMode: productcatalog.SettlementMode(usageBasedFee.SettlementMode),
 		},
 	}, nil
