@@ -6,6 +6,7 @@ import (
 
 	"github.com/samber/lo"
 
+	"github.com/openmeterio/openmeter/openmeter/currencies"
 	"github.com/openmeterio/openmeter/openmeter/entitlement"
 	"github.com/openmeterio/openmeter/openmeter/subscription"
 	"github.com/openmeterio/openmeter/pkg/convert"
@@ -26,6 +27,10 @@ import (
 // TODO: localize error so phase and item keys are always included (alongside subscription reference)
 // TODO (OM-1074): clean up this control flow
 func (s *service) sync(ctx context.Context, view subscription.SubscriptionView, newSpec subscription.SubscriptionSpec) (subscription.Subscription, error) {
+	if err := newSpec.MaterializeRateCardCurrencies(currencies.NewCurrencyReference(newSpec.Currency)); err != nil {
+		return subscription.Subscription{}, fmt.Errorf("failed to materialize subscription item currencies: %w", err)
+	}
+
 	return transaction.Run(ctx, s.TransactionManager, func(ctx context.Context) (subscription.Subscription, error) {
 		var def subscription.Subscription
 
