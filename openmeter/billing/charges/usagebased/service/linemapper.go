@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -161,7 +162,7 @@ func (i populateStandardLineFromRunInput) Validate() error {
 		errs = append(errs, err)
 	}
 
-	return models.NewNillableGenericValidationError(errs...)
+	return models.NewNillableGenericValidationError(errors.Join(errs...))
 }
 
 func populateStandardLineFromRun(stdLine *billing.StandardLine, input populateStandardLineFromRunInput) error {
