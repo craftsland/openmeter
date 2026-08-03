@@ -103,8 +103,8 @@ func (s SnapshottedUsage) IsZero() bool {
 // UsageSnapshot is the cumulative usage state for the usage period containing
 // the snapshot.
 type UsageSnapshot struct {
-	Usage           float64
-	TotalGrantUsage float64
+	Usage           float64 `json:"usage"`
+	TotalGrantUsage float64 `json:"totalGrantUsage"`
 }
 
 type Snapshot struct {
