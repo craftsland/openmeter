@@ -35,6 +35,9 @@ func (BalanceSnapshot) Fields() []ent.Field {
 		field.JSON("usage", &balance.SnapshottedUsage{}).Immutable().Optional().SchemaType(map[string]string{
 			dialect.Postgres: "jsonb",
 		}),
+		field.JSON("usage_snapshot", &balance.UsageSnapshot{}).Immutable().Optional().SchemaType(map[string]string{
+			dialect.Postgres: "jsonb",
+		}),
 		field.Float("balance").Immutable().SchemaType(map[string]string{
 			dialect.Postgres: "numeric",
 		}),
